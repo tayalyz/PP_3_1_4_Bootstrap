@@ -19,19 +19,19 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u", User.class).getResultList();
+        return entityManager.createQuery("select u from User u join fetch u.roles", User.class).getResultList();
     }
 
     @Override
     public User getUserById(Long id) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where id = :id", User.class)
+        TypedQuery<User> query = entityManager.createQuery("select u from User u join fetch u.roles where u.id = :id", User.class)
                 .setParameter("id", id);
         return query.getSingleResult();
     }
 
     @Override
     public Optional<User> getUserByUsername(String username) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where username = :username", User.class)
+        TypedQuery<User> query = entityManager.createQuery("select u from User u join fetch u.roles where u.username = :username", User.class)
                 .setParameter("username", username);
         return query.getResultList().stream().findFirst();
     }

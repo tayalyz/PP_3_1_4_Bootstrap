@@ -13,9 +13,6 @@
         <div>
             Roles: <span th:text="${myUser.getAuthorities()}">#roles</span>
         </div>
-        <div>
-            <input type="button" value="User profile" onclick="window.location.href='/user'"/>
-        </div>
         <form th:action="@{/logout}" th:method="POST">
             <input type="submit" value="Logout"/>
         </form>

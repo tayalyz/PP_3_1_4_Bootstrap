@@ -27,41 +27,27 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String index(Principal principal, Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String index(@ModelAttribute("user") User user, Principal principal, Model model) {
         model.addAttribute("myUser", userDetailsService.loadUserByUsername(principal.getName()));
-        return "admin/index";
-    }
-
-    @GetMapping("/add")
-    public String add(@ModelAttribute("user") User user, Model model, Principal principal) {
         model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("myUser", userDetailsService.loadUserByUsername(principal.getName()));
-        return "admin/add";
+        model.addAttribute("users", userService.getAllUsers());
+        return "admin/index";
     }
 
     @PostMapping("/")
     public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/add";
+            return "admin/index";
         }
         userService.setUserRoles(user);
         userService.addUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id") Long id, Model model, Principal principal) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("myUser", userDetailsService.loadUserByUsername(principal.getName()));
-        return "admin/edit";
-    }
-
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/edit";
+            return "admin/index";
         }
         userService.setUserRoles(user);
         userService.updateUser(user);
